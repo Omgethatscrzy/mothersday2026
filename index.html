@@ -81,6 +81,14 @@
     top: 50%;
   }
 
+ .petal {
+    -webkit-tap-highlight-color: transparent; /* removes blue flash on tap */
+    touch-action: manipulation; /* removes 300ms tap delay */
+  }
+  .center-circle {
+    touch-action: manipulation;
+  }
+
   .petal:hover {
     filter: brightness(1.12);
     transform: var(--base-transform) scale(1.08) !important;
