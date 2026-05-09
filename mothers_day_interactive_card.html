@@ -1,0 +1,316 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+
+  .card-wrap {
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 1rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .floating-heart {
+    position: absolute;
+    font-size: 18px;
+    opacity: 0;
+    pointer-events: none;
+    animation: floatUp 5s ease-in infinite;
+  }
+
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(0) scale(0.8); }
+    20% { opacity: 0.7; }
+    80% { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(-220px) scale(1.2) rotate(15deg); }
+  }
+
+  .title {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: 8rem;
+    text-align: center;
+  }
+
+  .flower-container {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    margin-bottom: 6rem;
+
+  }
+
+  .petal {
+    position: absolute;
+    width: 72px;
+    height: 100px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    cursor: pointer;
+    transform-origin: bottom center;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 50%;
+    top: 50%;
+  }
+
+  .petal:hover {
+    filter: brightness(1.12);
+    transform: var(--base-transform) scale(1.08) !important;
+  }
+
+  .petal.revealed {
+    filter: brightness(1.18);
+  }
+
+  .petal-number {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    pointer-events: none;
+    margin-bottom: 28px;
+  }
+
+  .center-circle {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #F7C947;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 12px rgba(247,201,71,0.4);
+  }
+
+  .center-circle:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .center-emoji {
+    font-size: 26px;
+  }
+
+  .message-box {
+    min-height: 80px;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.25rem;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .message-box .msg-label {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 6px;
+  }
+
+ 
+
+  .message-box .msg-text {
+    font-size: 16px;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    font-weight: 400;
+    transition: opacity 0.3s;
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 1rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border-secondary);
+    transition: background 0.3s;
+  }
+
+  .dot.active {
+    background: #D4537E;
+  }
+
+  .final-msg {
+    display: none;
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+    max-width: 360px;
+  }
+
+  .final-msg.show { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .final-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+  }
+
+  .final-sub {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .customize-btn {
+    margin-top: 1.25rem;
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+</style>
+
+<h2 class="sr-only">Interactive Mother's Day card — click each flower petal to reveal a loving message</h2>
+
+<div class="card-wrap" id="cardWrap">
+  <p class="title">Happy Mother's Day</p>
+  <p class="subtitle" id="hintText">Tap each petal to reveal a message</p>
+
+  <div class="flower-container" id="flowerContainer">
+    <div class="center-circle" id="centerCircle" title="You found the center!">
+      <span class="center-emoji">&#128149;</span>
+    </div>
+  </div>
+
+  <div class="message-box" id="messageBox">
+    <p class="msg-label">Petal message</p>
+    <p class="msg-text" id="msgText">Click a petal to begin...</p>
+  </div>
+
+  <div class="progress-dots" id="progressDots"></div>
+
+  <div class="final-msg" id="finalMsg">
+    <p class="final-title">You are so loved.</p>
+    <p class="final-sub">Every petal is a piece of you — thank you for everything you do. This Mother's Day and every day.</p>
+  </div>
+</div>
+
+<script>
+const petals = [
+  { color: '#D4537E', msg: "You always know how to make things better — just being near you feels like home.", angle: 0 },
+  { color: '#E07B9A', msg: "Your laugh is one of my favourite sounds in the world. Never stop.", angle: 60 },
+  { color: '#C74F8E', msg: "The strength you carry quietly, every single day, amazes me.", angle: 120 },
+  { color: '#B5447A', msg: "You taught me more about kindness than anyone else ever could.", angle: 180 },
+  { color: '#E08FAA', msg: "Thank you for always believing in me before I believed in myself.", angle: 240 },
+  { color: '#CF6992', msg: "Being your child is the greatest gift I have ever been given.", angle: 300 },
+];
+
+const container = document.getElementById('flowerContainer');
+const msgText = document.getElementById('msgText');
+const msgLabel = document.querySelector('.msg-label');
+const progressDots = document.getElementById('progressDots');
+const finalMsg = document.getElementById('finalMsg');
+const hintText = document.getElementById('hintText');
+const messageBox = document.getElementById('messageBox');
+const cardWrap = document.getElementById('cardWrap');
+
+const revealed = new Set();
+
+petals.forEach((p, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.id = 'dot-' + i;
+  progressDots.appendChild(dot);
+
+  const rad = (p.angle - 90) * Math.PI / 180;
+  const dist = 82;
+  const cx = 130 + Math.cos(rad) * dist;
+  const cy = 130 + Math.sin(rad) * dist;
+
+  const petal = document.createElement('div');
+  petal.className = 'petal';
+  petal.style.background = p.color;
+  petal.style.width = '68px';
+  petal.style.height = '96px';
+  petal.style.left = (cx - 34) + 'px';
+  petal.style.top = (cy - 88) + 'px';
+  petal.style.transformOrigin = 'bottom center';
+  const rot = `rotate(${p.angle}deg) translateY(-8px)`;
+  petal.style.transform = rot;
+  petal.style.setProperty('--base-transform', rot);
+  petal.style.zIndex = 5;
+
+  const num = document.createElement('div');
+  num.className = 'petal-number';
+  num.textContent = i + 1;
+  petal.appendChild(num);
+
+  petal.addEventListener('click', () => {
+    revealed.add(i);
+    petal.classList.add('revealed');
+    document.getElementById('dot-' + i).classList.add('active');
+
+    msgLabel.textContent = 'Reason ' + (i + 1) + ' I love you';
+    msgText.style.opacity = '0';
+    setTimeout(() => {
+      msgText.textContent = p.msg;
+      msgText.style.opacity = '1';
+    }, 180);
+
+    if (revealed.size === petals.length) {
+      hintText.textContent = 'All petals revealed with love';
+      setTimeout(() => {
+        messageBox.style.display = 'none';
+        progressDots.style.display = 'none';
+        finalMsg.classList.add('show');
+        spawnHearts();
+      }, 900);
+    }
+  });
+
+  container.appendChild(petal);
+});
+
+document.getElementById('centerCircle').addEventListener('click', () => {
+  if (revealed.size < petals.length) {
+    hintText.textContent = 'Keep going — ' + (petals.length - revealed.size) + ' petals left!';
+  }
+});
+
+function spawnHearts() {
+  const emojis = ['&#10084;', '&#128149;', '&#128150;', '&#128147;'];
+  for (let i = 0; i < 12; i++) {
+    setTimeout(() => {
+      const h = document.createElement('div');
+      h.className = 'floating-heart';
+      h.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+      h.style.left = (10 + Math.random() * 80) + '%';
+      h.style.bottom = '40px';
+      h.style.animationDelay = '0s';
+      h.style.animationDuration = (3.5 + Math.random() * 2.5) + 's';
+      cardWrap.appendChild(h);
+      setTimeout(() => h.remove(), 6000);
+    }, i * 200);
+  }
+}
+</script>
