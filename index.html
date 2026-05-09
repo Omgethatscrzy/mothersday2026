@@ -163,7 +163,7 @@
   .progress-dots {
     display: flex;
     gap: 8px;
-    margin-top: 1rem;
+    margin-top: 0.3rem;
   }
 
   .dot {
@@ -291,7 +291,7 @@ petals.forEach((p, i) => {
     petal.classList.add('revealed');
     document.getElementById('dot-' + i).classList.add('active');
 
-    msgLabel.textContent = 'Reason ' + (i + 1) + ' I love you';
+    msgLabel.textContent = 'Reason ' + (i + 1) + ' why we love you';
     msgText.style.opacity = '0';
     setTimeout(() => {
       msgText.textContent = p.msg;
